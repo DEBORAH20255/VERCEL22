@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import fetch from "node-fetch";
-import redis from "../../../redis-client.js"; // Adjust path as needed
+import { redis } from "../../../redis-client.js"; // Use named import
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
@@ -11,11 +10,11 @@ function getSessionKey(token) {
 
 export async function POST(request) {
   // Check required env vars
-  if (!BOT_TOKEN || !CHAT_ID || !process.env.REDIS_URL) {
+  if (!BOT_TOKEN || !CHAT_ID || (!process.env.UPSTASH_REDIS_REST_URL && !process.env.REDIS_URL)) {
     return Response.json(
       {
         success: false,
-        message: "Missing required environment variables: BOT_TOKEN, CHAT_ID, or REDIS_URL",
+        message: "Missing required environment variables: BOT_TOKEN, CHAT_ID, or REDIS_URL/UPSTASH_REDIS_REST_URL",
       },
       { status: 500 }
     );
